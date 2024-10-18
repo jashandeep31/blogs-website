@@ -1,10 +1,12 @@
 import React from "react";
 import NavbarClient from "./navbar-client";
+import { auth } from "@/lib/auth";
 
-const navbar = () => {
+const navbar = async () => {
+  const session = await auth();
   return (
     <div>
-      <NavbarClient />
+      <NavbarClient session={session} />
     </div>
   );
 };
