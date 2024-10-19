@@ -12,6 +12,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -25,6 +27,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Session } from "next-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { signOut } from "next-auth/react";
 
 const NavbarClient = ({ session }: { session: Session | null }) => {
   const { setTheme } = useTheme();
@@ -139,14 +142,17 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                  Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                  Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                  System
+                <DropdownMenuLabel>Profile Actions</DropdownMenuLabel>
+                <DropdownMenuItem>Bookmarks</DropdownMenuItem>
+                <DropdownMenuItem>Profile Settings</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-red-500 hover:text-red-600 duration-300 "
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
