@@ -1,7 +1,9 @@
 import React from "react";
-import { BlogCreateUpdateForm } from "../components/BlogCreateUpdateForm";
+import { BlogCreateUpdateForm } from "../components/blog-create-update-form";
+import { db } from "@/lib/db";
 
-const page = () => {
+const page = async () => {
+  const categories = await db.category.findMany({});
   return (
     <div>
       <h1 className="text-lg font-bold">Create Blog</h1>
@@ -9,7 +11,7 @@ const page = () => {
         Create a new blog post here.
       </p>
       <div className="mt-6">
-        <BlogCreateUpdateForm />
+        <BlogCreateUpdateForm categories={categories} />
       </div>
     </div>
   );

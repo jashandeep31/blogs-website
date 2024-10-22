@@ -88,7 +88,7 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="border p-1  rounded flex items-center gap-3 justify-between min-w-48 text-muted-foreground hover:text-foreground duration-300">
+          <button className="border p-1  rounded hidden md:flex items-center gap-3 justify-between min-w-48 text-muted-foreground hover:text-foreground duration-300">
             <span className="text-sm  ">Search Blog</span>
             <span className="text-[9px] border bg-muted rounded p-1 ">
               CTRL + K
@@ -127,7 +127,7 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="border rounded-full"
+                  className="border rounded-full bg-muted"
                   size="icon"
                 >
                   <Avatar>
@@ -137,7 +137,7 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
                         src={session.user.image}
                       />
                     )}
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarFallback>👦</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>

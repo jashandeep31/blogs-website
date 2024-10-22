@@ -1,4 +1,4 @@
-import { FileUser, Plus } from "lucide-react";
+import { ChartBarStacked, FileUser, Plus } from "lucide-react";
 
 import {
   Sidebar,
@@ -26,6 +26,16 @@ const sideBarItems = [
         title: "Create Blog",
         url: "/admin/create",
         icon: Plus,
+      },
+    ],
+  },
+  {
+    name: "Categories Actions",
+    links: [
+      {
+        title: "Manage Categories",
+        url: "/admin/categories",
+        icon: ChartBarStacked,
       },
     ],
   },

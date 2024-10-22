@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,23 +22,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createBlogValidator } from "@/validators/blog.validator";
+import { Category } from "@prisma/client";
+import CKEditorComponent from "../create/components/ck-editor";
+import { toast } from "sonner";
+import { createBlogAction } from "../create/actions";
 
-const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
-export const BlogCreateUpdateForm = () => {
+const formSchema = createBlogValidator;
+export const BlogCreateUpdateForm = ({
+  categories,
+}: {
+  categories: Category[];
+}) => {
+  const [contentValue, setContentValue] = useState("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+      title: "How to create a next js project in the turborepo",
+      image:
+        "https://images.prismic.io/turing/652ec31afbd9a45bcec81965_Top_Features_in_Next_js_13_7f9a32190f.webp?auto=format,compress",
+      description:
+        "In this blog we learn how to install the next js app in the turbo repo project",
+      published: true,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const id = toast.loading("Creating..");
+    const res = await createBlogAction(values);
+    if (res.status === "ok") {
+      toast.success(res.message, { id });
+    } else {
+      toast.error(res.message, { id });
+    }
   }
+
+  useEffect(() => {
+    if (form.getValues().content !== contentValue) {
+      form.setValue("content", contentValue);
+    }
+  }, [contentValue, form]);
+
   return (
     <div>
       <Form {...form}>
@@ -65,7 +89,7 @@ export const BlogCreateUpdateForm = () => {
           />
           <FormField
             control={form.control}
-            name="title"
+            name="categoryId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
@@ -75,13 +99,15 @@ export const BlogCreateUpdateForm = () => {
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a verified email to display" />
+                      <SelectValue placeholder="Select a category for your blog" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="m@example.com">m@example.com</SelectItem>
-                    <SelectItem value="m@google.com">m@google.com</SelectItem>
-                    <SelectItem value="m@support.com">m@support.com</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -90,12 +116,13 @@ export const BlogCreateUpdateForm = () => {
           />
           <FormField
             control={form.control}
-            name="title"
+            name="image"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Image</FormLabel>
                 <FormControl>
                   <Input
+                    type="text"
                     placeholder="How add next auth to Next JS"
                     {...field}
                   />
@@ -106,10 +133,10 @@ export const BlogCreateUpdateForm = () => {
           />
           <FormField
             control={form.control}
-            name="title"
+            name="description"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel>Summary </FormLabel>
+                <FormLabel>Description </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="How add next auth to Next JS"
@@ -117,43 +144,35 @@ export const BlogCreateUpdateForm = () => {
                   />
                 </FormControl>
                 <FormDescription>
-                  A short summary of the blog post. This will be displayed on
-                  the blog post card and in the meta description.
+                  A short description of the blog post. This will be displayed
+                  on the blog post card and in the meta description.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <FormLabel>Bio</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Tell us a little bit about yourself"
-                    className="resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+          <FormItem className="md:col-span-2 ">
+            <FormLabel>Content</FormLabel>
+            <CKEditorComponent
+              value={contentValue}
+              setValue={setContentValue}
+            />
+            {form.formState.errors.content && (
+              <FormMessage>{form.formState.errors.content.message}</FormMessage>
             )}
-          />
-          <div className="md:col-span-2"></div>
-          <div className="items-top flex space-x-2">
+          </FormItem>
+          <div className="items-top flex space-x-2 border p-1 border-red-300">
             <Checkbox checked id="terms1" />
             <div className="grid gap-1.5 leading-none">
               <label
                 htmlFor="terms1"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Save as Draft
+                Publish the Blog
               </label>
               <p className="text-sm text-muted-foreground">
-                Saving as draft will not publish the blog post.
+                By checking the checkbox your blog will get public.
               </p>
             </div>
           </div>

@@ -1,8 +1,11 @@
 import BlogCard from "@/components/blog-card";
+import { db } from "@/lib/db";
 import { Facebook } from "lucide-react";
 import React from "react";
 
-const page = () => {
+const page = async () => {
+  const blogs = await db.blog.findMany();
+
   return (
     <div className="container md:mt-12 mt-6">
       <section className="grid md:grid-cols-4 md:gap-6 gap-4">
@@ -35,8 +38,9 @@ const page = () => {
       <section className="md:mt-24 mt-6 text-muted-foreground font-medium">
         <h2 className="text-2xl">Latest blogs</h2>
         <div className="grid md:grid-cols-2 gap-6 mt-3">
-          <BlogCard />
-          <BlogCard />
+          {blogs.map((blog) => (
+            <BlogCard blog={blog} key={blog.id} />
+          ))}
         </div>
       </section>
     </div>
