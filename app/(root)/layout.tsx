@@ -1,9 +1,11 @@
 import Navbar from "@/components/navbar";
+import SearchDialog from "@/components/search-dialog";
 import React from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-col justify-between min-h-screen">
+      <SearchDialog />
       <header className="sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <Navbar />
       </header>
