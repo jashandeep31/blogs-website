@@ -23,34 +23,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createBlogValidator } from "@/validators/blog.validator";
-import { Category } from "@prisma/client";
+import { Blog, Category } from "@prisma/client";
 import CKEditorComponent from "../create/components/ck-editor";
 import { toast } from "sonner";
-import { createBlogAction } from "../create/actions";
+import { createBlogAction, updateBlogAction } from "../create/actions";
 
 const formSchema = createBlogValidator;
 export const BlogCreateUpdateForm = ({
   categories,
+  blog,
 }: {
   categories: Category[];
+  blog?: Blog;
 }) => {
-  const [contentValue, setContentValue] = useState("");
+  const [contentValue, setContentValue] = useState(blog ? blog.content : "");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "How to create a next js project in the turborepo",
-      image:
-        "https://images.prismic.io/turing/652ec31afbd9a45bcec81965_Top_Features_in_Next_js_13_7f9a32190f.webp?auto=format,compress",
-      description:
-        "In this blog we learn how to install the next js app in the turbo repo project",
-      published: true,
-    },
+    defaultValues:
+      blog && createBlogValidator.safeParse(blog).data
+        ? createBlogValidator.safeParse(blog).data
+        : {},
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const id = toast.loading("Creating..");
-    const res = await createBlogAction(values);
+    const res = blog
+      ? await updateBlogAction(values, blog.slug)
+      : await createBlogAction(values);
     if (res.status === "ok") {
       toast.success(res.message, { id });
     } else {
@@ -177,7 +177,9 @@ export const BlogCreateUpdateForm = ({
             </div>
           </div>
           <div className="md:col-span-2">
-            <Button type="submit">Create Blog Post</Button>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {blog ? "Update blog " : "Create blog post"}
+            </Button>
           </div>
         </form>
       </Form>
