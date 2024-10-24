@@ -22,11 +22,11 @@ model User {
   updatedAt DateTime @updatedAt
 
   // custom fields
-  role       Role      @default(USER)
-  Comment    Comment[]
-  blogs      Blog[]    @relation("AuthoredBlogs")
-  likedBlogs Blog[]    @relation("LikedBlogs")
-  Reply      Reply[]
+  role    Role      @default(USER)
+  Comment Comment[]
+  blogs   Blog[]    @relation("AuthoredBlogs")
+  Reply   Reply[]
+  Like    Like[]
 }
 
 enum Role {
@@ -100,14 +100,16 @@ model Category {
 }
 
 model Blog {
-  id          String  @id @default(cuid())
-  title       String
-  slug        String  @unique
-  description String
-  image       String
-  content     String
-  published   Boolean
-  likes       Int     @default(0)
+  id            String  @id @default(cuid())
+  title         String
+  slug          String  @unique
+  description   String
+  image         String
+  content       String
+  published     Boolean
+  likes         Int     @default(0)
+  commentsCount Int     @default(0)
+  views         Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -115,11 +117,10 @@ model Blog {
   author   User   @relation("AuthoredBlogs", fields: [authorId], references: [id])
   authorId String
 
-  likedBy User[] @relation("LikedBlogs")
-
   categoryId String
   category   Category  @relation(fields: [categoryId], references: [id])
   Comment    Comment[]
+  Like       Like[]
 }
 
 model Comment {
@@ -148,4 +149,16 @@ model Reply {
 
   comment   Comment @relation(fields: [commentId], references: [id])
   commentId String
+}
+
+model Like {
+  id   String @id @default(uuid())
+  user User   @relation(fields: [userId], references: [id])
+  blog Blog   @relation(fields: [blogId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  blogId String
 }

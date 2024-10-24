@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 
 const navbar = async () => {
   const session = await auth();
+
   return (
     <div>
       <NavbarClient session={session} />

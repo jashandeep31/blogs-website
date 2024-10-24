@@ -4,7 +4,21 @@ import { Facebook } from "lucide-react";
 import React from "react";
 
 const page = async () => {
-  const blogs = await db.blog.findMany();
+  const blogs = await db.blog.findMany({
+    include: {
+      author: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 
   return (
     <div className="container md:mt-12 mt-6">
