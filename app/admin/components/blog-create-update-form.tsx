@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { createBlogAction, updateBlogAction } from "../create/actions";
 
 const formSchema = createBlogValidator;
-export const BlogCreateUpdateForm = ({
+const BlogCreateUpdateForm = ({
   categories,
   blog,
 }: {
@@ -186,3 +186,5 @@ export const BlogCreateUpdateForm = ({
     </div>
   );
 };
+
+export default BlogCreateUpdateForm;

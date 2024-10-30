@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import React from "react";
-import { BlogCreateUpdateForm } from "../../components/blog-create-update-form";
+import BlogCreateUpdateForm from "../../components/blog-create-update-form";
 
 const page = async ({ params }: { params: { slug: string } }) => {
   const categories = await db.category.findMany({});

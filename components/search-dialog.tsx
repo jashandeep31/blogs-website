@@ -5,11 +5,12 @@ import { Search, X } from "lucide-react";
 import { Blog } from "@prisma/client";
 import { getBlogsByQuery } from "@/app/actions";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { useRecoilState } from "recoil";
+import { searchBoxState } from "@/states/searbox-state";
 
 const SearchDialog = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useRecoilState(searchBoxState);
   useEffect(() => {
     (async () => {
       setBlogs(await getBlogsByQuery());
@@ -22,10 +23,14 @@ const SearchDialog = () => {
         e.preventDefault();
         setOpen((open) => !open);
       }
+      if (e.key === "Escape" && open) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [setOpen, open]);
 
   return (
     <div>
@@ -37,6 +42,7 @@ const SearchDialog = () => {
               <Search size={16} />
               <input
                 type="text"
+                placeholder="Search..."
                 className=" bg-background w-full p-1 outline-none"
               />
               <button

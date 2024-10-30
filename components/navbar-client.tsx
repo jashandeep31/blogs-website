@@ -28,16 +28,21 @@ import {
 import { Session } from "next-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { searchBoxState } from "@/states/searbox-state";
 
 const NavbarClient = ({ session }: { session: Session | null }) => {
   const { setTheme } = useTheme();
+  const [searchBoxStatus, setSearchBoxStatus] = useRecoilState(searchBoxState);
   return (
     <div className="">
       <div className="container py-3 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <h2 className="text-xl font-bold ">
-            Blogs<span className="text-primary">Web</span>
-          </h2>
+          <Link href={"/"}>
+            <h2 className="text-xl font-bold ">
+              Blogs<span className="text-primary">Web</span>
+            </h2>
+          </Link>
           <div className="hidden md:flex items-center ">
             <NavigationMenu>
               <NavigationMenuList>
@@ -88,7 +93,12 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="border p-1  rounded hidden md:flex items-center gap-3 justify-between min-w-48 text-muted-foreground hover:text-foreground duration-300">
+          <button
+            className="border p-1  rounded hidden md:flex items-center gap-3 justify-between min-w-48 text-muted-foreground hover:text-foreground duration-300"
+            onClick={() => {
+              setSearchBoxStatus(!searchBoxStatus);
+            }}
+          >
             <span className="text-sm  ">Search Blog</span>
             <span className="text-[9px] border bg-muted rounded p-1 ">
               CTRL + K

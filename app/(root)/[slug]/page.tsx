@@ -3,8 +3,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Heart } from "lucide-react";
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
+import CreateCommentForm from "./components/create-comment-form";
+import { auth } from "@/lib/auth";
+import CommentCard from "./components/comment-card";
 
 const page = async ({ params }: { params: { slug: string } }) => {
   const blog = await db.blog.findUnique({
@@ -18,8 +20,18 @@ const page = async ({ params }: { params: { slug: string } }) => {
           image: true,
         },
       },
+      Comment: {
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
+  const session = await auth();
   if (!blog) return <h1>Blog not found 404</h1>;
   return (
     <div className="container md:mt-12 mt-6 max-w-2xl">
@@ -65,24 +77,13 @@ const page = async ({ params }: { params: { slug: string } }) => {
       <div className="mt-12">
         <h3 className="text-lg font-bold">Comments</h3>
         <div className="mt-3">
-          <div className="">
-            <div className="px-2 py-3">
-              <div className="flex items-center gap-1">
-                <span>👦</span>
-                <p className="font-bold">Jashandeep Singh</p>
-              </div>
-              <div className="text-muted-foreground pl-2 pt-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-                enim necessitatibus quam quos! Veritatis, molestias cupiditate
-                quam cumque vel hic!
-              </div>
-              <div className="flex items-center justify-between mt-3 px-2">
-                <p className="text-muted-foreground text-xs">12-04-2024</p>
-                <Button variant={"ghost"}>View Replies(4) </Button>
-              </div>
-            </div>
-            <hr />
-          </div>
+          {session?.user && <CreateCommentForm id={blog.id} />}
+        </div>
+
+        <div className="mt-3">
+          {blog.Comment.map((comment) => (
+            <CommentCard comment={comment} key={comment.id} />
+          ))}
         </div>
       </div>
     </div>

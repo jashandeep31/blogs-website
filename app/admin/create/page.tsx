@@ -1,5 +1,5 @@
 import React from "react";
-import { BlogCreateUpdateForm } from "../components/blog-create-update-form";
+import BlogCreateUpdateForm from "../components/blog-create-update-form";
 import { db } from "@/lib/db";
 
 const page = async () => {
