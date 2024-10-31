@@ -30,8 +30,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { searchBoxState } from "@/states/searbox-state";
+import { Category } from "@prisma/client";
 
-const NavbarClient = ({ session }: { session: Session | null }) => {
+const NavbarClient = ({
+  session,
+  categories,
+}: {
+  session: Session | null;
+  categories: Category[];
+}) => {
   const { setTheme } = useTheme();
   const [searchBoxStatus, setSearchBoxStatus] = useRecoilState(searchBoxState);
   return (
@@ -64,29 +71,15 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                      {components.map((component) => (
+                      {categories.map((category) => (
                         <ListItem
-                          key={component.title}
-                          title={component.title}
-                          href={component.href}
-                        >
-                          {component.description}
-                        </ListItem>
+                          key={category.id}
+                          title={category.name}
+                          href={`/category/${category.slug}`}
+                        ></ListItem>
                       ))}
                     </ul>
                   </NavigationMenuContent>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link href="/docs" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent"
-                      )}
-                    >
-                      Documentation
-                    </NavigationMenuLink>
-                  </Link>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
@@ -153,8 +146,19 @@ const NavbarClient = ({ session }: { session: Session | null }) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Profile Actions</DropdownMenuLabel>
-                <DropdownMenuItem>Bookmarks</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={"/profile"}>Profile</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Profile Settings</DropdownMenuItem>
+                {session.user.role === "ADMIN" && (
+                  <>
+                    <DropdownMenuLabel>Admin Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href={"/admin"}>Admin</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="text-red-500 hover:text-red-600 duration-300 "
@@ -198,43 +202,5 @@ const ListItem = React.forwardRef<
   );
 });
 ListItem.displayName = "ListItem";
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
 
 export default NavbarClient;

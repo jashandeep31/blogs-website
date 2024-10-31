@@ -22,7 +22,7 @@ const CommentCard = ({
         <div className="text-muted-foreground pl-2 pt-1">{comment.content}</div>
         <div className="flex items-center justify-between mt-3 px-2">
           <p className="text-muted-foreground text-xs">
-            {dayjs(comment.createdAt).format("MMM YYYY")}
+            {dayjs(comment.createdAt).format("DD MMM YYYY")}
           </p>
           <Button variant={"ghost"} disabled></Button>
         </div>

@@ -35,6 +35,7 @@ const CreateCommentForm = ({ id }: { id: string }) => {
     });
     if (res.status === "ok") {
       toast.success(res.message, { id: toastId });
+      form.setValue("comment", "");
     } else {
       toast.error(res.message, { id: toastId });
     }
