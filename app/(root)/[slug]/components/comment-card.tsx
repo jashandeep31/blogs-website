@@ -24,7 +24,7 @@ const CommentCard = ({
           <p className="text-muted-foreground text-xs">
             {dayjs(comment.createdAt).format("MMM YYYY")}
           </p>
-          <Button variant={"ghost"}>View Replies(4) </Button>
+          <Button variant={"ghost"} disabled></Button>
         </div>
       </div>
       <hr />

@@ -1,12 +1,13 @@
 import { db } from "@/lib/db";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 import dayjs from "dayjs";
 import CreateCommentForm from "./components/create-comment-form";
 import { auth } from "@/lib/auth";
 import CommentCard from "./components/comment-card";
+import LikeButton from "./components/like-button";
 
 const page = async ({ params }: { params: { slug: string } }) => {
   const blog = await db.blog.findUnique({
@@ -46,19 +47,14 @@ const page = async ({ params }: { params: { slug: string } }) => {
       <p className="text-muted-foreground text-base">{blog.description}</p>
       <img src={blog.image} className="border rounded-md mt-6 shadow-md" />
       <div className="mt-6">
-        <div className="flex gap-1 items-center">
-          <button>
-            <Heart size={16} />
-          </button>
-          <span className="text-sm text-muted-foreground">{blog.likes}</span>
-        </div>
+        <LikeButton blog={blog} />
       </div>
       <div
         className="mt-6 "
         dangerouslySetInnerHTML={{ __html: blog.content }}
       ></div>
       <p className="mt-6 text-muted-foreground font-medium">
-        Last Updated: {dayjs(blog.updatedAt).format("DD/MM/YYYY")}
+        Created At: {dayjs(blog.createdAt).format("DD/MM/YYYY")}
       </p>
       <div className="mt-6 flex justify-end">
         <Link

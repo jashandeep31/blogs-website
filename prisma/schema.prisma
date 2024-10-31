@@ -161,4 +161,6 @@ model Like {
 
   userId String
   blogId String
+
+  @@unique([userId, blogId])
 }
