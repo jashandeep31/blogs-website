@@ -118,11 +118,12 @@ model Blog {
   author   User   @relation("AuthoredBlogs", fields: [authorId], references: [id])
   authorId String
 
-  categoryId String
-  category   Category   @relation(fields: [categoryId], references: [id])
-  Comment    Comment[]
-  Like       Like[]
-  Bookmark   Bookmark[]
+  categoryId   String
+  category     Category       @relation(fields: [categoryId], references: [id])
+  Comment      Comment[]
+  Like         Like[]
+  Bookmark     Bookmark[]
+  FeaturedBlog FeaturedBlog[]
 }
 
 model Comment {
@@ -179,4 +180,14 @@ model Bookmark {
   blogId String
 
   @@unique([userId, blogId])
+}
+
+model FeaturedBlog {
+  id   String @id @default(uuid())
+  blog Blog   @relation(fields: [blogId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  blogId String @unique
 }

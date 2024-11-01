@@ -99,7 +99,7 @@ const BlogCreateUpdateForm = ({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a category for your blog" />
+                      <SelectValue placeholder="Next JS" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -139,7 +139,7 @@ const BlogCreateUpdateForm = ({
                 <FormLabel>Description </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="How add next auth to Next JS"
+                    placeholder="How add next auth to Next JS  (write a short description of 100)"
                     {...field}
                   />
                 </FormControl>

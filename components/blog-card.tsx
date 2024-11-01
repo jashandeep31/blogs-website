@@ -19,7 +19,10 @@ export default function BlogCard({
   };
 }) {
   return (
-    <Link href={`/${blog.slug}`} className="p-4 border rounded-lg shadow-sm">
+    <Link
+      href={`/${blog.slug}`}
+      className="p-4 border rounded-lg shadow-sm block"
+    >
       <div className="flex items-center space-x-2 mb-2">
         <Avatar className="w-6 h-6">
           {blog.author.image && (

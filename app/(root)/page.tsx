@@ -20,25 +20,40 @@ const page = async () => {
         },
       },
     },
+    take: 10,
+  });
+
+  const featuredBlog = await db.featuredBlog.findFirst({
+    select: {
+      blog: true,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return (
     <div className="container md:mt-12 mt-6">
       <section className="grid md:grid-cols-4 md:gap-6 gap-4">
-        {blogs[0] && (
-          <Link href={`/${blogs[0].slug}`} className="md:col-span-3 block">
-            <img src={blogs[0].image} className="border p-1" alt="" />
+        {featuredBlog && (
+          <Link
+            href={`/${featuredBlog.blog.slug}`}
+            className="md:col-span-3 block"
+          >
+            <img src={featuredBlog.blog.image} className="border p-1" alt="" />
             <div className="md:mt-6 mt-3">
-              <h1 className="text-3xl font-bold ">{blogs[0].title}</h1>
+              <h1 className="text-3xl font-bold ">{featuredBlog.blog.title}</h1>
               <p className="text-sm text-muted-foreground mt-1">
-                {blogs[0].description}
+                {featuredBlog.blog.description}
               </p>
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
               <div className="flex items-center space-x-4">
-                <span>{dayjs(blogs[0].createdAt).format("MMM YYYY")}</span>
-                <span>{blogs[0].views || 0} views</span>
-                <span>{blogs[0].commentsCount || 0} comments</span>
+                <span>
+                  {dayjs(featuredBlog.blog.createdAt).format("MMM YYYY")}
+                </span>
+                <span>{featuredBlog.blog.views || 0} views</span>
+                <span>{featuredBlog.blog.commentsCount || 0} comments</span>
               </div>
             </div>
           </Link>

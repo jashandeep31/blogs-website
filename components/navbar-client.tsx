@@ -75,7 +75,7 @@ const NavbarClient = ({
                         <ListItem
                           key={category.id}
                           title={category.name}
-                          href={`/category/${category.slug}`}
+                          href={`/blogs?category=${category.slug}`}
                         ></ListItem>
                       ))}
                     </ul>

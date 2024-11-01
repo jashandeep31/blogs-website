@@ -5,6 +5,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { getLikeStatus, likeHandler } from "../actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 // ! high refactorization is needed in this page as getting likes and updating the count is not a proper way
 const LikeButton = ({ blog }: { blog: Blog }) => {
@@ -29,12 +31,16 @@ const LikeButton = ({ blog }: { blog: Blog }) => {
       toast.error(res.message, { id });
     }
   };
+
   return (
     <div>
       <button
         disabled={liked === "loading"}
         onClick={handleAction}
-        className="inline-flex items-center gap-1"
+        className={cn(
+          buttonVariants({ variant: "ghost" }),
+          "inline-flex items-center gap-1"
+        )}
       >
         <Heart
           className={`${liked === true ? "text-red-500 fill-red-500" : ""}`}
